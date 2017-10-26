@@ -964,6 +964,13 @@ void sessionPropertyListener(void *                  inClientData,
     CheckError( AudioSessionGetProperty(kAudioSessionProperty_CurrentHardwareSampleRate, &size, &currentSamplingRate), "Checking hardware sampling rate");
     self.samplingRate = currentSamplingRate;
     NSLog(@"Current sampling rate: %f", self.samplingRate);
+    
+    
+    // Get the hardware volume.
+    Float32 currentVolume;
+    size = sizeof(currentVolume);
+    CheckError( AudioSessionGetProperty(kAudioSessionProperty_CurrentHardwareOutputVolume, &size, &currentVolume), "Checking hardware valume");
+    NSLog(@"Current volume: %f", currentVolume);
 	
 }
 
