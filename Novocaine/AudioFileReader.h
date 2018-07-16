@@ -22,7 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import "RingBuffer.h"
+#import "RingBuffer.hpp"
 #import "Novocaine.h"
 
 // ARC only supports GCD objects if the minimum deployment target is iOS 6+ or OS X 10.8+
@@ -57,6 +57,9 @@
 @property (nonatomic, assign, readonly) float samplingRate;
 @property (nonatomic, assign, readonly) UInt32 numChannels;
 @property (nonatomic, assign, readonly) BOOL playing;
+
+@property (nonatomic, assign, readonly) float *outputBuffer;
+@property (nonatomic, assign, readonly) UInt32 framesCount;
 
 
 - (id)initWithAudioFileURL:(NSURL *)urlToAudioFile samplingRate:(float)thisSamplingRate numChannels:(UInt32)thisNumChannels;

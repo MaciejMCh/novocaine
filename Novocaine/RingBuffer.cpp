@@ -22,7 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include "RingBuffer.h"
+#include "RingBuffer.hpp"
 #import <libkern/OSAtomic.h>
 
 static void atomic_set(int64_t *ptr, int64_t value)

@@ -42,6 +42,7 @@
 @property (nonatomic, assign) AudioStreamBasicDescription outputFormat;
 @property (nonatomic, assign) ExtAudioFileRef inputFile;
 @property (nonatomic, assign) UInt32 outputBufferSize;
+@property (nonatomic, assign) UInt32 framesCount;
 @property (nonatomic, assign) float *outputBuffer;
 @property (nonatomic, assign) float *holdingBuffer;
 @property (nonatomic, assign) UInt32 numSamplesReadPerPacket;
@@ -68,6 +69,7 @@
     // Close the ExtAudioFile
     ExtAudioFileDispose(self.inputFile);
     
+    NSLog(@"free");
     free(self.outputBuffer);
     free(self.holdingBuffer);
     
@@ -113,9 +115,11 @@
         
         
         // Arbitrary buffer sizes that don't matter so much as long as they're "big enough"
-        self.outputBufferSize = 65536;
-        self.numSamplesReadPerPacket = 8192;
+        self.numSamplesReadPerPacket = [self getTotalFrames];
+        self.outputBufferSize = self.numSamplesReadPerPacket * 8;
+        self.framesCount = self.numSamplesReadPerPacket;
         self.desiredPrebufferedSamples = self.numSamplesReadPerPacket*2;
+        NSLog(@"alloc");
         self.outputBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
         self.holdingBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
         
@@ -142,6 +146,7 @@
     if (ringBuffer->NumUnreadFrames() > self.desiredPrebufferedSamples)
         return;
     
+    NSLog(@"set");
     memset(self.outputBuffer, 0, sizeof(float)*self.desiredPrebufferedSamples);
     
     AudioBufferList incomingAudio;
@@ -212,6 +217,14 @@
     
     return (float)framesInThisFile/(float)fileStreamFormat.mSampleRate;
     
+}
+
+- (signed long long)getTotalFrames {
+    SInt64 framesInThisFile;
+    UInt32 propertySize = sizeof(framesInThisFile);
+    ExtAudioFileGetProperty(self.inputFile, kExtAudioFileProperty_FileLengthFrames, &propertySize, &framesInThisFile);
+    
+    return framesInThisFile;
 }
 
 - (void)configureReaderCallback
