@@ -69,7 +69,6 @@
     // Close the ExtAudioFile
     ExtAudioFileDispose(self.inputFile);
     
-    NSLog(@"free");
     free(self.outputBuffer);
     free(self.holdingBuffer);
     
@@ -119,7 +118,6 @@
         self.outputBufferSize = self.numSamplesReadPerPacket * 8;
         self.framesCount = self.numSamplesReadPerPacket;
         self.desiredPrebufferedSamples = self.numSamplesReadPerPacket*2;
-        NSLog(@"alloc");
         self.outputBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
         self.holdingBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
         
@@ -146,7 +144,6 @@
     if (ringBuffer->NumUnreadFrames() > self.desiredPrebufferedSamples)
         return;
     
-    NSLog(@"set");
     memset(self.outputBuffer, 0, sizeof(float)*self.desiredPrebufferedSamples);
     
     AudioBufferList incomingAudio;
