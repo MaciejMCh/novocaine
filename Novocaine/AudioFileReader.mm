@@ -118,8 +118,8 @@
         self.outputBufferSize = self.numSamplesReadPerPacket * 8;
         self.framesCount = self.numSamplesReadPerPacket;
         self.desiredPrebufferedSamples = self.numSamplesReadPerPacket*2;
-        self.outputBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
-        self.holdingBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
+        self.outputBuffer = (float *)calloc(self.desiredPrebufferedSamples, sizeof(float));
+        self.holdingBuffer = (float *)calloc(self.desiredPrebufferedSamples, sizeof(float));
         
         
         // Allocate a ring buffer (this is what's going to buffer our audio)
